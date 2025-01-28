@@ -1,0 +1,30 @@
+-- Tabela Pessoa
+CREATE TABLE Pessoa (
+    Id_Pessoa INT PRIMARY KEY,         -- Chave primária
+    Nome_Pessoa VARCHAR(255) NOT NULL  -- Nome da pessoa
+);
+
+-- Tabela Ator (Subclasse de Pessoa)
+CREATE TABLE Ator (
+    A_Id_Pessoa INT PRIMARY KEY,       -- Chave primária (herdada de Pessoa)
+    Ano_De_Nascimento INT,             -- Ano de nascimento do ator
+    Ano_De_Morte INT,                  -- Ano de morte do ator (pode ser NULL)
+    Id_Filme_At INT,                   -- Referência para a tabela Filme
+    FOREIGN KEY (A_Id_Pessoa) REFERENCES Pessoa(Id_Pessoa), -- Chave estrangeira para Pessoa
+    FOREIGN KEY (Id_Filme_At) REFERENCES Filme(Id_Filme)    -- Chave estrangeira para Filme
+);
+
+-- Tabela Profissões_Ator
+CREATE TABLE Profissões_Ator (
+    A_Id_Pessoa INT,                   -- Referência para Ator (herdada de Pessoa)
+    Profissão VARCHAR(100),            -- Profissão do ator
+    PRIMARY KEY (A_Id_Pessoa, Profissão), -- Chave primária composta
+    FOREIGN KEY (A_Id_Pessoa) REFERENCES Ator(A_Id_Pessoa) -- Chave estrangeira para Ator
+);
+
+-- Tabela Diretor (Subclasse de Pessoa)
+CREATE TABLE Diretor (
+    D_Id_Pessoa INT PRIMARY KEY,       -- Chave primária (herdada de Pessoa)
+    País_De_Origem VARCHAR(100),       -- País de origem do diretor
+    FOREIGN KEY (D_Id_Pessoa) REFERENCES Pessoa(Id_Pessoa) -- Chave estrangeira para Pessoa
+);
