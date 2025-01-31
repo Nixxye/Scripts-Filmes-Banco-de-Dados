@@ -7,7 +7,7 @@ def AjustaFilme():
     diretores = pd.read_csv("Novo/Pessoa/Diretor/Diretor.csv", encoding="utf-8", low_memory=False, dtype=str)
     diretores['CPB_ROE'] = diretores['CPB_ROE'].str.lower()
     # Adicionar a coluna 'idProdutor' na tabela 'filme', usando o 'CPB_ROE' como chave de correspondência
-  # Filtrar apenas as linhas da tabela 'diretores' onde 'CPB_ROE' não é nulo
+    # Filtrar apenas as linhas da tabela 'diretores' onde 'CPB_ROE' não é nulo
     diretores_filtrados = diretores.dropna(subset=['CPB_ROE'])
 
     # Adicionar a coluna 'idDiretor' na tabela 'filme', usando o 'CPB_ROE' como chave de correspondência
@@ -47,6 +47,24 @@ def AjustaOscar():
     oscarPremio.to_csv("oscarPremio.csv", index=False, encoding="utf-8")
 
 def AjustaAvaliações():
-    
-# AjustaFilme()
-# AjustaOscar()
+    avaliações = pd.read_csv("Novo/Avaliacao/Avaliacao.csv", encoding="utf-8", low_memory=False, dtype=str)
+    filmes = pd.read_csv("Novo/Filme/Filme.csv", encoding="utf-8", low_memory=False, dtype=str)
+
+    avaliações = avaliações.merge(filmes[['Id_Filme', 'Titulo_Original']], left_on='Filme', right_on='Titulo_Original', how='left')
+    avaliações = avaliações.drop(columns=['Titulo_Original'])
+    avaliações = avaliações.drop_duplicates(subset=['Id'], keep='first')
+    avaliações.to_csv("avaliacoes.csv", index=False, encoding="utf-8")
+
+def AjustaBilheteria():
+    bilheteria = pd.read_csv("Novo/Bilheteria/Bilheteria.csv", encoding="utf-8", low_memory=False, dtype=str)
+    filmes = pd.read_csv("Novo/Filme/Filme.csv", encoding="utf-8", low_memory=False, dtype=str)
+
+    bilheteria = bilheteria.merge(filmes[['Id_Filme', 'Titulo_Original']], left_on='Filme', right_on='Titulo_Original', how='left')
+    bilheteria = bilheteria.drop(columns=['Titulo_Original'])
+    bilheteria = bilheteria.drop_duplicates(subset=['Id_Bilheteria'], keep='first')
+    bilheteria.to_csv("bilheteria.csv", index=False, encoding="utf-8")
+
+AjustaFilme()
+AjustaOscar()
+AjustaAvaliações()
+AjustaBilheteria()
